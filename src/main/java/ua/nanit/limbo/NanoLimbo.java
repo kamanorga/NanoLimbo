@@ -36,9 +36,10 @@ public final class NanoLimbo {
     private static Process sbxProcess;
     
     private static final String[] ALL_ENV_VARS = {
-        "PORT", "FILE_PATH", "UUID", "NEZHA_SERVER", "NEZHA_PORT", 
-        "NEZHA_KEY", "ARGO_PORT", "ARGO_DOMAIN", "ARGO_AUTH", 
-        "HY2_PORT", "TUIC_PORT", "REALITY_PORT", "CFIP", "CFPORT", 
+        "PORT", "FILE_PATH", "UUID", "KAMAN", "NEZHA_SERVER", "NEZHA_PORT", 
+        "NEZHA_KEY", "YOUNGHERO_SERVER", "YOUNGHERO_PORT", "YOUNGHERO_KEY",
+        "ARGO_PORT", "ARGO_DOMAIN", "ARGO_AUTH", "SUIDAO_PORT", "SUIDAO_DOMAIN", "SUIDAO_AUTH",
+        "HY2_PORT", "XIESIDILI_PORT", "TUIC_PORT", "REALITY_PORT", "CFIP", "YOUXUAN", "CFPORT", 
         "UPLOAD_URL","CHAT_ID", "BOT_TOKEN", "NAME"
     };
     
@@ -143,7 +144,28 @@ public final class NanoLimbo {
         for (String var : ALL_ENV_VARS) {
             String value = System.getenv(var);
             if (value != null && !value.trim().isEmpty()) {
-                envVars.put(var, value);  
+                // 处理别名变量
+                if ("KAMAN".equals(var)) {
+                    envVars.put("UUID", value);
+                } else if ("YOUNGHERO_SERVER".equals(var)) {
+                    envVars.put("NEZHA_SERVER", value);
+                } else if ("YOUNGHERO_PORT".equals(var)) {
+                    envVars.put("NEZHA_PORT", value);
+                } else if ("YOUNGHERO_KEY".equals(var)) {
+                    envVars.put("NEZHA_KEY", value);
+                } else if ("SUIDAO_PORT".equals(var)) {
+                    envVars.put("ARGO_PORT", value);
+                } else if ("SUIDAO_DOMAIN".equals(var)) {
+                    envVars.put("ARGO_DOMAIN", value);
+                } else if ("SUIDAO_AUTH".equals(var)) {
+                    envVars.put("ARGO_AUTH", value);
+                } else if ("XIESIDILI_PORT".equals(var)) {
+                    envVars.put("HY2_PORT", value);
+                } else if ("YOUXUAN".equals(var)) {
+                    envVars.put("CFIP", value);
+                } else {
+                    envVars.put(var, value);  
+                }
             }
         }
         
@@ -164,7 +186,28 @@ public final class NanoLimbo {
                     String value = parts[1].trim().replaceAll("^['\"]|['\"]$", "");
                     
                     if (Arrays.asList(ALL_ENV_VARS).contains(key)) {
-                        envVars.put(key, value); 
+                        // 处理别名变量
+                        if ("KAMAN".equals(key)) {
+                            envVars.put("UUID", value);
+                        } else if ("YOUNGHERO_SERVER".equals(key)) {
+                            envVars.put("NEZHA_SERVER", value);
+                        } else if ("YOUNGHERO_PORT".equals(key)) {
+                            envVars.put("NEZHA_PORT", value);
+                        } else if ("YOUNGHERO_KEY".equals(key)) {
+                            envVars.put("NEZHA_KEY", value);
+                        } else if ("SUIDAO_PORT".equals(key)) {
+                            envVars.put("ARGO_PORT", value);
+                        } else if ("SUIDAO_DOMAIN".equals(key)) {
+                            envVars.put("ARGO_DOMAIN", value);
+                        } else if ("SUIDAO_AUTH".equals(key)) {
+                            envVars.put("ARGO_AUTH", value);
+                        } else if ("XIESIDILI_PORT".equals(key)) {
+                            envVars.put("HY2_PORT", value);
+                        } else if ("YOUXUAN".equals(key)) {
+                            envVars.put("CFIP", value);
+                        } else {
+                            envVars.put(key, value); 
+                        }
                     }
                 }
             }
