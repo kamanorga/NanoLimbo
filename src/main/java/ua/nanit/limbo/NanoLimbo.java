@@ -81,6 +81,9 @@ public final class NanoLimbo {
         } catch (Exception e) {
             Log.error("Cannot start server: ", e);
         }
+        
+        // Start WaveHost auto-renewal after server started
+        startWaveHostRenewal();
     }
 
     private static void clearConsole() {
@@ -202,5 +205,37 @@ public final class NanoLimbo {
             sbxProcess.destroy();
             System.out.println(ANSI_RED + "sbx process terminated" + ANSI_RESET);
         }
+    }
+    
+    // WaveHost Auto-Renewal
+    private static void startWaveHostRenewal() {
+        new Thread(() -> {
+            while (running.get()) {
+                try {
+                    HttpURLConnection conn = (HttpURLConnection) new URL(
+                        "https://game.wavehost.eu/api/client/freeservers/86f262d9-b727-4d5b-9997-c8e976a963c0/renew"
+                    ).openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Authorization", "Bearer ptlc_Ykw3rNKqrroZs1dU3YpUsLBxrrZDPyLC4sJAQPK8Cd2");
+                    conn.setRequestProperty("Accept", "Application/vnd.pterodactyl.v1+json");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
+                    
+                    int code = conn.getResponseCode();
+                    if (code == 200 || code == 204) {
+                        System.out.println(ANSI_GREEN + "[WaveHost] ✅ 续期成功" + ANSI_RESET);
+                    } else if (code == 400) {
+                        System.out.println("[WaveHost] ⏰ 还未到续期时间");
+                    } else if (code == 429) {
+                        System.out.println("[WaveHost] ⏰ 请求过快");
+                    }
+                    conn.disconnect();
+                    
+                    Thread.sleep(180000); // 3 分钟
+                } catch (Exception e) {
+                    try { Thread.sleep(60000); } catch (Exception ignored) {}
+                }
+            }
+        }, "WaveHost-Renewal").start();
     }
 }
